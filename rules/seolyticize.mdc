@@ -1,0 +1,11 @@
+---
+description: How to use the Seolyticize MCP tools for SEO work on a client's site
+alwaysApply: false
+---
+
+- Seolyticize tools address one client at a time by `clientId`; `list_clients` gives the ids this connection may use.
+- Read the client brief (`get_client_brief`) before deciding anything, and record conclusions with `update_client_brief`.
+- Tools marked as spending money take `maxCostMicros`. Quote first with `estimate_cost`, tell the person the total, and pass the quote as the limit.
+- A null in a result means unknown, not zero. Write "not reported" rather than 0.
+- Do not create share links (`create_report_link`, `set_report_sharing`) unless the person asks: anyone holding one can read the report.
+- When fixing audit findings in code, confirm the fix on the live page (`get_page_details`, `inspect_url`) before calling it done.

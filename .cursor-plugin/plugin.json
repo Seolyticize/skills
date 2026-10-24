@@ -1,0 +1,23 @@
+{
+  "name": "seolyticize",
+  "version": "1.0.0",
+  "description": "SEO work through Seolyticize: onboarding, audits and code fixes, rankings, keywords, content, links, local, AI visibility, analytics and conversions, reports.",
+  "author": {
+    "name": "Seolyticize",
+    "url": "https://seolyticize.com"
+  },
+  "homepage": "https://github.com/Seolyticize/skills",
+  "license": "MIT",
+  "keywords": [
+    "seo",
+    "site-audit",
+    "keyword-research",
+    "rank-tracking",
+    "mcp"
+  ],
+  "icon": "./.claude-plugin/icon.png",
+  "privacyPolicyUrl": "https://seolyticize.com/legal/privacy",
+  "skills": "./skills/",
+  "rules": "./rules/",
+  "mcpServers": "./mcp.json"
+}

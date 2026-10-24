@@ -1,0 +1,15 @@
+{
+  "name": "seolyticize",
+  "description": "Seolyticize's SEO workflows for agencies, as agent skills over its MCP server.",
+  "owner": {
+    "name": "Seolyticize",
+    "url": "https://seolyticize.com"
+  },
+  "plugins": [
+    {
+      "name": "seolyticize",
+      "source": "./",
+      "description": "SEO work through Seolyticize: onboarding, audits and code fixes, rankings, keywords, content, links, local, AI visibility, analytics and conversions, reports."
+    }
+  ]
+}

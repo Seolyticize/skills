@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "seolyticize": {
+      "type": "http",
+      "url": "https://seolyticize.com/api/mcp"
+    }
+  }
+}

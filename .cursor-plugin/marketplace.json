@@ -1,0 +1,13 @@
+{
+  "name": "seolyticize",
+  "owner": {
+    "name": "Seolyticize"
+  },
+  "plugins": [
+    {
+      "name": "seolyticize",
+      "source": "./",
+      "description": "SEO work through Seolyticize: onboarding, audits and code fixes, rankings, keywords, content, links, local, AI visibility, analytics and conversions, reports."
+    }
+  ]
+}
