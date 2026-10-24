@@ -38,7 +38,7 @@ Exact and partial matches are told apart only when `moneyTerms` are passed.
 
 **Evidence it uses:**
 
-- the vendor spam score (pass `spamScores`);
+- the vendor spam score (`fetchSpamScores: true` buys it inside the call; or pass `spamScores`);
 - sitewide links (footer, blogroll);
 - link-seller neighbourhoods (hundreds of outbound domains from few pages);
 - commercial exact-match anchors (brand terms excluded);

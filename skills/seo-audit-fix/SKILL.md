@@ -77,9 +77,11 @@ For each template-level issue:
    - passed is false when anything at or above failOn changed. The default failOn is critical: noindex added, canonical changed, title dropped, a page now 4xx or 5xx, hreflang lost, a page unreachable.
    - markdown is a ready pull-request comment.
    - Use urls instead of previewUrl to check only the pages you touched.
+   - baseline says which crawl it compared with and when it ran. If notes says the latest crawl started before the last recorded deploy, the baseline may already hold an earlier release: run `start_crawl` first, or pass baselineCrawlId (a complete crawl from `list_crawls`) to choose the crawl.
 2. **Read every change.** The fix you meant should show as a change, and nothing else should. An unexpected critical change is a bug in your fix: revert or correct it before merge.
 3. **Compare the whole origin** for a large change (a new layout, a framework upgrade, a migration). Call `compare_sites` with a as the preview and b as production.
    - If a's home redirects to b's host, or between www and the apex, redirect names it and nothing is diffed. Make sure that redirect is the intended canonical host.
+   - When you changed the redirect itself (www to apex, a host move), call `compare_sites` with followRedirect true. It follows the redirect on each path and compares where it lands with the same path on the other host. redirectMap and the changes show any path sent elsewhere, to an error, or not redirected.
 4. **A protected preview** gets the client's crawl credentials. `check_deploy` sends them automatically. For `compare_sites`, set sendCrawlAuthTo to a.
 5. **CI.** If the repository runs the Seolyticize GitHub Action, it calls `check_deploy` on every pull request. See the deploy-check skill for what fails a PR.
 

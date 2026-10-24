@@ -98,11 +98,13 @@ Do triage in this order, so tasks are created only for real work.
 
 1. **Accept the intentional findings.** Examples: login pages noindexed by design, legal archives, sort variants that are canonicalised on purpose.
    - Call `accept_issue` with the ruleId, either a template (/login, /legal/\*, /docs/\*?sort=\*) or a list of urls, a reason, and optionally until (YYYY-MM-DD) for a temporary state.
-   - Check matchedNow. It counts how many of the latest crawl's findings the acceptance covers. A 0 usually means the template does not match.
+   - **Preview a template first.** Call `accept_issue` with dryRun true. It saves nothing and returns matchedNow (the latest crawl's findings it covers), rulePages (all of that rule's findings) and a sample of the covered addresses. Read the sample before saving.
+   - Read warning, on the preview and on the saved acceptance. It is set when the template matches nothing (usually a typo) or covers more than half the rule's pages (usually too broad: it hides the issue rather than its exceptions). Fix the template rather than accept on a warning.
    - **Ask the user before accepting anything** that is not obviously by design. Accepting a finding hides it from the scorecard, the digest, the tasks and the alerts.
    - `list_accepted_issues` shows what is already accepted. Pass includeLapsed to see acceptances whose until date has passed. `unaccept_issue` reverses an acceptance.
 2. **Route by owner.** Do this when the site runs on several platforms or several teams own it, for example docs on one vendor, the shop on another and the blog in-house.
-   - Call `set_path_owners` with the full list of prefix, owner and optional contact. It **replaces** the whole list, so read `list_path_owners` first and send the merged list.
+   - Call `set_path_owners` with prefix, owner and optional contact. By default (mode replace) the list you send **replaces** the whole list. To add or change a few prefixes and keep the rest, use mode merge, with remove for prefixes to drop.
+   - Run it with dryRun true first. It saves nothing and returns the list that would result and the changes: added, updated (with the old owner), removed and kept. Check removed before saving a replace.
    - A URL belongs to the longest prefix it falls under, and / is the catch-all.
    - From then on, `get_audit_summary` and `list_issue_pages` split issues by owner, and each task names its owner.
 3. **Make the tasks.**

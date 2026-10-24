@@ -18,7 +18,9 @@ metadata:
 ## Before you start
 
 1. **Client.** Call `list_clients`, then `get_client_brief` for the key pages and any earlier release notes.
-2. **A baseline.** Call `list_crawls`. `check_deploy` compares against the latest complete crawl of production. If that crawl is old, or predates the last release, it will report long-standing differences as if they were new. Call `start_crawl` and poll `get_crawl_status` first when you can.
+2. **A baseline.** Call `list_crawls`. `check_deploy` compares against the latest complete crawl of production unless you pass baselineCrawlId, the id of another complete crawl of this client (one from before a release, say). If the latest crawl is old, or predates the last release, it will report long-standing differences as if they were new. Call `start_crawl` and poll `get_crawl_status` first when you can.
+   - The result's baseline says which crawl was used, when it started, and whether it was the latest or the one you chose.
+   - notes warns when the latest crawl started before the last recorded deploy: a call to the deploy hook (`create_deploy_hook`) or a deploy annotation (`add_annotation` with kind deploy). Pass that warning on.
 3. **Protected previews.** If the preview sits behind basic auth, a bypass header or cookies, call `set_crawl_auth` once. Both tools can then send those credentials to the preview host only.
 4. **Help.** Errors carry a `code` and a `next` step, so follow `next`. `get_error_catalogue` lists every code. Unknown arguments are refused, so never invent one.
 
@@ -41,7 +43,7 @@ Pick failOn to set how strict the check is:
 
 How to read the result:
 
-1. **passed and summary.** passed is the verdict. summary gives the counts per severity, and checked says how many pages were compared.
+1. **passed and summary.** passed is the verdict. summary gives the counts per severity, and checked says how many pages were compared. Read notes and baseline before trusting the verdict.
 2. **Every change, critical first.** Say whether each one was intended. A canonical change on a template whose URLs deliberately changed is expected. A noindex on the product template is not.
 3. **markdown** is a ready pull-request comment.
 
@@ -58,8 +60,8 @@ How to read the result:
 
 1. **Critical differences come first,** followed by a Markdown summary.
 2. **www and the apex.** When one side's homepage redirects to the other's host (www to the apex, or the reverse), redirect names the status and the target, and **nothing is diffed**, because that side has no pages of its own. That is not a pass. Decide which host is canonical, then:
-   - **Production redirects:** make sure it is a single 301 (not a 302, and not a chain through http) and that the canonical tags name the same host. Then compare the side that serves pages.
-   - **Staging redirects to production:** you are not testing staging at all. Point a at the staging host that actually serves pages.
+   - **Production redirects:** check the redirect itself. Call `compare_sites` again with followRedirect true. Each path on the redirecting side is followed to where it lands and compared with the same path on the other host. redirectMap lists where each path landed. The changes are the paths the redirect gets wrong: sent elsewhere (often the homepage), landing on a 4xx or 5xx, still served on the old host, or a temporary 302 or 307 at the home page. redirect stays set and followedRedirect is true. Also make sure the canonical tags name the destination host. Then compare the side that serves pages.
+   - **Staging redirects to production:** you are not testing staging at all. Point a at the staging host that actually serves pages. followRedirect only tells you that staging forwards to production.
 3. **Path-level redirects.** Single paths that redirect across hosts are listed in redirected. Check each one against the intended redirect map. `plan_redirect_map` drafts one for a migration.
 4. **Trailing slashes.** `get_site_conventions` checks the trailing-slash convention and HSTS preload readiness on the live host.
 
@@ -152,7 +154,7 @@ Say which signal you saw, on how many pages, and since when.
 ## Honesty rules
 
 - **A pass covers only what was checked.** It means nothing at or above failOn changed on the pages compared, not that the release is safe everywhere. Give checked.
-- **Old baselines mislead.** An old baseline crawl makes old differences look new. Say when the crawl predates the last release.
+- **Old baselines mislead.** An old baseline crawl makes old differences look new. Say when the crawl predates the last release; `check_deploy` puts that in notes when a deploy is on record. Name the crawl you compared with (baseline) in the answer.
 - **Lab is not field.** Lab speed on a preview is not field data.
 - **Unknown is not zero.** Null means unknown.
 
@@ -160,7 +162,7 @@ Say which signal you saw, on how many pages, and since when.
 
 1. **The verdict:** go, go with notes, or no-go (before release); or holding, watch, or roll back (after release).
 2. **The evidence:** pages checked, the critical and warning counts, and each critical change (URL, field, before and after).
-3. **Host behaviour:** which host is canonical and whether www/apex redirects are a single 301 to it.
+3. **Host behaviour:** which host is canonical, whether www/apex redirects are a single 301 to it, and (from followRedirect) whether every path lands on the same path there.
 4. **Next steps:** the fixes to make before merge, or what to watch and until when.
 5. **Recorded:** call `update_client_brief` with a research entry for the release (date, verdict, anything accepted).
 6. **No share links.** Never create share links (`create_report_link`, `set_report_sharing`) unless asked.

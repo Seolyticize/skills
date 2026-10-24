@@ -80,7 +80,7 @@ Outcome: either a writer-ready brief, or a draft that scores at par with the pag
 | `check_programmatic_pages`, `audit_page`, `simulate_serp_snippet`                         | Free                                                                                                             |
 
 - Before any paid call, run `estimate_cost` with the exact arguments (or pass `dryRun: true`), tell the user the total, then call with the quote as `maxCostMicros` so it cannot cost more than agreed.
-- Check `get_client_costs` before a long rewrite loop. If a call is refused for budget, follow the error's `next` step.
+- Check what is left with `get_budget_status` (free) before a long rewrite loop. If a call is refused for budget, follow the error's `next` step.
 
 ## Rules
 

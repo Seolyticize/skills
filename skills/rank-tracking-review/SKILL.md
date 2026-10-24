@@ -64,7 +64,7 @@ Read `references/movement-patterns.md` for the full pattern → cause → action
 - Never invent arguments: unknown ones are refused with invalid_input. Follow an error's `next` step. `get_error_catalogue` lists every code.
 - Report "not captured" and "not in the results" exactly. Never fill them with a number.
 - Say when a cause is likely rather than proven. Volatility and swaps are evidence, not proof.
-- Paid steps (`refresh_rankings`, `get_tracker_ai_mode`, `get_serp_history`, `get_ai_mode_answer`, `get_live_serps`) are quoted with `estimate_cost`, or run with `dryRun: true`, first. Check `get_client_costs` if spend looks high.
+- Paid steps (`refresh_rankings`, `get_tracker_ai_mode`, `get_serp_history`, `get_ai_mode_answer`, `get_live_serps`) are quoted with `estimate_cost`, or run with `dryRun: true`, first. Check `get_budget_status` (free) if spend looks high.
 - REST callers send `Idempotency-Key` on writes.
 
 ## What to hand back

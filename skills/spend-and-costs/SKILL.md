@@ -1,17 +1,17 @@
 ---
 name: spend-and-costs
-description: Control and explain what Seolyticize spends on the agency's own DataForSEO and AI vendor accounts - quote calls before making them, set client budgets and alerts, read get_costs and get_client_costs, reconcile the vendor balance with get_vendor_reconciliation and explain any gap, and keep paid calls low. Use for "how much will this cost", "cap this client at $50", "what are we spending", "which client costs most", "why did our DataForSEO balance drop" or "cut our data costs".
+description: Control and explain what Seolyticize spends on the agency's own DataForSEO and AI vendor accounts - quote calls before making them, set client budgets and alerts, read a budget and its month-end forecast with get_budget_status, read get_costs and get_client_costs, reconcile the vendor balance with get_vendor_reconciliation and explain any gap, and keep paid calls low. Use for "how much will this cost", "cap this client at $50", "what are we spending", "how much budget is left", "will this client go over", "which client costs most", "why did our DataForSEO balance drop" or "cut our data costs".
 license: MIT
 metadata:
   author: Seolyticize
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Spend and costs
 
 Outcome: the person knows what a piece of work will cost before it runs, what was spent and on what, whether the vendor's bill matches the ledger, and how to spend less. Load the seolyticize skill first; its `references/errors-and-spend.md` has the full quote and refusal rules.
 
-Amounts: quotes and caps are micro-USD (1,000,000 = $1). `get_costs`, `get_client_costs` and `get_vendor_reconciliation` answer in US dollars. Convert before telling the person, and say which you are quoting.
+Amounts: quotes and caps are micro-USD (1,000,000 = $1). `get_budget_status`, `get_costs`, `get_client_costs` and `get_vendor_reconciliation` answer in US dollars. Convert before telling the person, and say which you are quoting.
 
 Reading spend needs `cost:view` (manager, admin). Setting budgets needs `client:manage`. Seeing vendor connections needs an admin. Check with `whoami`.
 
@@ -29,10 +29,15 @@ Reading spend needs `cost:view` (manager, admin). Setting budgets needs `client:
 
 ## B. Budgets
 
-1. `get_client_costs` for the client's last 30 days, to set a realistic figure.
-2. `set_budget` with `clientId`, `monthlyUsd` (null removes it) and `alertAt` between 0 and 1 (for example 0.8: a budget.threshold event and alert fire once that month). Leave either out to keep it as it is.
-3. A per-call ceiling belongs to a key, not a client: `create_api_key` with `maxCostUsdPerCall`. Suggest it for automations and assistants.
-4. Purchases claim budget before they are made, so parallel calls cannot overshoot, and a failed vendor call gives its claim back. When a call is refused for budget, report it. Raising the budget is the person's decision.
+1. `get_budget_status` with `clientId` first. It is free and buys nothing:
+   - `budget`: `monthlyLimitUsd`, `spentThisMonthUsd`, `remainingUsd`, `resetsAt` (the first of next month, UTC) and `alertAtPct`. Null means no budget is set, so paid calls are not capped; `spentThisMonthUsd` is still given beside it.
+   - `projection`: an estimate of month-end spend (`projectedMonthEndUsd`) from the paid work already scheduled: each rank tracker's cadence, keywords and devices, AI visibility checks on their cadence, and alert rules with `paidSource` on. Each item is the same ceiling `estimate_cost` quotes for a month, taken pro rata for the days left, so the real month usually ends lower. `overBudget` says whether it passes the budget; `unpriced` lists scheduled work it could not price, with the reason.
+   - Always call the projection an estimate. On-demand calls are not in it.
+2. `get_client_costs` for the client's last 30 days, to set a realistic figure.
+3. `set_budget` with `clientId`, `monthlyUsd` (null removes it) and `alertAt` between 0 and 1 (for example 0.8: a budget.threshold event and alert fire once that month). Leave either out to keep it as it is.
+4. A per-call ceiling belongs to a key, not a client: `create_api_key` with `maxCostUsdPerCall`. Suggest it for automations and assistants.
+5. If `projection.overBudget` is true, say so before the month runs out: name the items driving it (the dearest come first) and quote the cheaper schedule with `estimate_cost` (tool rank_tracker) or `estimate_ai_visibility_cost`. Paid work past the budget is refused, so late-month captures would be skipped.
+6. Purchases claim budget before they are made, so parallel calls cannot overshoot, and a failed vendor call gives its claim back. When a call is refused for budget, report it. Raising the budget is the person's decision.
 
 ## C. Reading what was spent
 
@@ -43,7 +48,7 @@ Reading spend needs `cost:view` (manager, admin). Setting budgets needs `client:
    - AI visibility answers come from the schedule: `get_ai_visibility_setup` shows it.
    - Keyword and domain research is one-off. Check whether the same seeds or domains were bought repeatedly.
    - Paid alert sources (`paidSource` on competitor-new-keywords and web-mentions alerts) buy on each sweep: `list_alert_rules` shows them.
-4. Compare with the client's budget (`set_budget` value, or the month to date in any paid result's `spend`).
+4. Compare with the client's budget and its forecast: `get_budget_status`.
 
 ## D. Reconciling the vendor bill
 
@@ -79,6 +84,7 @@ Use when the DataForSEO balance fell by more than `get_costs` shows, or the pers
 
 - The figure first, in dollars, and whether it is a quote (a maximum) or what was actually spent, with the period.
 - For spend: the top clients or operations, each with cost and request count, and the one or two changes that would cut it most, with the saving quoted.
+- For a budget: what is left, when it resets, and the month-end estimate, labelled as an estimate, with the scheduled work behind it.
 - For reconciliation: agrees or not, the difference, the most likely reason from the evidence, and what the person should check (for example who else holds the login). Never call a gap a leak without evidence.
 - Anything unknown (vendor gave no figure, no budget set) stated as unknown.
 - Record conclusions in the client brief's research log with `update_client_brief` when they concern one client.

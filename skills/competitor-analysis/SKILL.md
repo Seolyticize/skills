@@ -68,7 +68,7 @@ Outcome: one short profile per serious search competitor, covering where they be
 
 - These are paid: `find_serp_competitors`, `get_domain_overview`, `get_batch_analysis`, `get_domain_keyword_gap`, `get_ranked_keywords`, `get_top_pages`, `get_keyword_advertisers` and `get_ai_brand_mentions`. So are `get_link_gap` and `get_best_pages_by_links` when they reach the vendor, and `get_ai_citation_gap` with a live question.
 - Before each, run `estimate_cost` with the exact arguments (or pass `dryRun: true`). Tell the user the total for the whole analysis, then call each tool with its quote as `maxCostMicros`.
-- Prefer the free reading first (`get_keyword_gap` before `get_domain_keyword_gap`, the index before the vendor). Check `get_client_costs` against the budget before a five-rival teardown.
+- Prefer the free reading first (`get_keyword_gap` before `get_domain_keyword_gap`, the index before the vendor). Check `get_budget_status` (free) before a five-rival teardown.
 
 ## Rules
 

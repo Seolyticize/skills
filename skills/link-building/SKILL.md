@@ -30,9 +30,10 @@ Outcome: a ranked outreach list with a reason and an angle for each prospect, sa
    - `get_link_checks` (free) gives what our crawler last saw on each linking page: live, lost, unknown, moved or unverifiable_js.
      - Only lost is a removal.
      - Moved means the page redirected and the link is not at the new address. Check the movedTo page before calling it lost.
-     - unverifiable_js means a JavaScript shell that cannot be read without a browser. It is not lost.
+     - unverifiable_js means a JavaScript shell that cannot be read without a browser. It is not lost. `recheck_links` with `render: true` reads those pages in a real browser and re-judges each link.
      - Unknown means the page could not be read.
    - Run `recheck_links` (free, slow; needs a rank tracker) for a fresh check, then read `get_link_checks` again.
+   - For the unverifiable_js pages, run `recheck_links` with `render: true` (free; up to 25 pages a run, or name them with `sourceUrls`). It runs in the background: poll `get_run_status` with job `links` and the `runId`, then read `get_link_checks`. Each page comes back live, lost or moved, with `rendered: true`. A page that draws nothing even in a browser stays unverifiable_js, and one that will not load keeps its verdict. If `moreWaiting` is over 0, run it again.
 
 3. **Broken-link building on rivals.**
    - `get_competitor_broken_pages` lists a rival's dead pages that still have links. It is free with `source: "index"`, paid from the vendor.
@@ -68,9 +69,9 @@ Outcome: a ranked outreach list with a reason and an angle for each prospect, sa
 1. **Profile score.** `get_backlink_health` with `moneyTerms`, and `industry` (saas, ecommerce, local, publisher or agency) so anchors are judged against that industry's natural ranges.
    - It scores 0–100 from seven factors, each weighted by its source's confidence.
    - With too little data it says insufficient data (X/7) or not assessed. Report exactly that, never a number.
-   - Spam scores sharpen it. `get_backlink_spam_scores` is paid (one purchase for up to 1,000 domains): quote it, get a yes, then pass the result as `spamScores` here and in the next step.
+   - Spam scores sharpen it. Pass `fetchSpamScores: true` to buy them inside the call: one paid request for up to 1,000 linking sites, the same price as `get_backlink_spam_scores`. Quote it with `estimate_cost` (or `dryRun: true`) and get a yes first. Sites scored in the last 30 days are reused free, so the same flag on `get_toxic_link_risk` in the next step usually costs nothing. `spamScoreFetch` in the answer says how many were reused, bought or unscored.
 
-2. **Toxic links and disavow.** `get_toxic_link_risk` gives a verdict per linking site (healthy, review or toxic), with each of its patterns reported as flagged, clear or unmeasured.
+2. **Toxic links and disavow.** `get_toxic_link_risk` (with `fetchSpamScores: true` if the user agreed to spam scores) gives a verdict per linking site (healthy, review or toxic), with each of its patterns reported as flagged, clear or unmeasured.
    - Review means look, not disavow.
    - Its `disavow` advice is yes when toxic sites are over 10%, and no under 2%.
    - It also shows whether the last saved file already names each site, and lists toxic sites new since that file. `get_disavow_history` shows past files.
@@ -91,7 +92,7 @@ Read `references/link-health-thresholds.md` for every factor, band and pattern.
 
 ## Money and writes
 
-- These are paid: `get_link_gap`, `get_broken_backlinks`, `get_competitor_broken_pages` and `get_best_pages_by_links` when they reach the vendor; `get_page_backlinks`, `find_unlinked_mentions`, `search_web_content`, `find_link_opportunities`, `get_forum_opportunities` with keywords, `get_backlink_spam_scores`, `get_referring_networks` and `draft_outreach_emails`.
+- These are paid: `get_link_gap`, `get_broken_backlinks`, `get_competitor_broken_pages` and `get_best_pages_by_links` when they reach the vendor; `get_page_backlinks`, `find_unlinked_mentions`, `search_web_content`, `find_link_opportunities`, `get_forum_opportunities` with keywords, `get_backlink_spam_scores`, `get_backlink_health` and `get_toxic_link_risk` with `fetchSpamScores: true`, `get_referring_networks` and `draft_outreach_emails`.
 - Quote each with `estimate_cost` (or pass `dryRun: true`). Tell the user the total, then call with the quote as `maxCostMicros`. Prefer `source: "index"` when it answers.
 - `send_outreach` takes `dryRun: true`. Always preview first. REST callers send `Idempotency-Key` on writes.
 - Never invent arguments: unknown ones are refused with invalid_input. Follow an error's `next` step.
@@ -103,6 +104,6 @@ Call `update_client_brief` with a `research` entry: the prospect list's size and
 ## What to hand back
 
 1. **Prospects,** top 10–20, as a table: site or page, source (rival linker, reclaim, broken page, mention, resource or journalist), authority, why they would link, and the angle. Add the total saved to the list.
-2. **Reclaims:** dead pages with links and their redirect target, and links truly lost (lost status only). List moved and unverifiable links separately as "to verify".
+2. **Reclaims:** dead pages with links and their redirect target, and links truly lost (lost status only, including ones a browser re-check found lost). List moved and still-unverifiable links separately as "to verify".
 3. **Health:** the score or "insufficient data (X/7)", the factors at warn or critical, toxic share, the disavow advice and why, velocity red flags and network flags.
 4. **Next steps,** and what was spent against the quote. Outreach not yet sent is shown as a draft.

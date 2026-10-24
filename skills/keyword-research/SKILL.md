@@ -78,7 +78,7 @@ Outcome: a short, prioritised list of keyword clusters. Each cluster has its int
 
 - These are paid on the agency's DataForSEO account: `keyword_explorer` (first read of a seed), `get_ranked_keywords`, `get_top_pages`, `research_topic`, `get_keyword_metrics`, `cluster_keywords`, `serp_overview` and `keyword_traffic_potential` (both on a cache miss), and `add_tracked_keywords` (every run).
 - Quote every paid call with `estimate_cost`, or pass `dryRun: true` to get the quote back without buying. Then pass the quote as `maxCostMicros`. Cached data is free, so real charges are often lower than the quote.
-- Check `get_client_costs` and the client's budget before a large expansion. If a call is refused for budget, follow the error's `next` step. Raise the cap with `set_budget` only if the user asks.
+- Check `get_budget_status` (free: the budget, what is left this month, and the projected month-end) before a large expansion. If a call is refused for budget, follow the error's `next` step. Raise the cap with `set_budget` only if the user asks.
 - These are free: `striking_distance`, `get_search_opportunities`, `get_long_tail_candidates`, `get_questions`, `get_personal_keyword_difficulty`, `explain_keyword_difficulty`, `forecast_keyword_traffic`, `get_query_intents`, the list tools and the owner tools.
 
 ## Rules
