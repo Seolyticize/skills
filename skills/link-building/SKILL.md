@@ -1,6 +1,6 @@
 ---
 name: link-building
-description: Find, win and keep links for a Seolyticize client. Prospects come from competitors' linkers, broken and lost links to reclaim, unlinked mentions, resource pages and journalist requests, with outreach previewed as a dry run before anything is sent. Also checks link health: profile score by industry, toxic links and whether to disavow, velocity red flags and link networks. Use for "link building", "backlink prospects", "outreach", "lost links", "toxic backlinks", "should we disavow", "link profile health", "journalist requests".
+description: Find, win and keep links for a Seolyticize client. Prospects come from competitors' linkers, broken and lost links to reclaim, unlinked mentions, resource pages and journalist requests, with outreach previewed as a dry run before anything is sent. Also checks link health — profile score by industry, toxic links and whether to disavow, velocity red flags and link networks. Use for "link building", "backlink prospects", "outreach", "lost links", "toxic backlinks", "should we disavow", "link profile health", "journalist requests".
 license: MIT
 metadata:
   author: Seolyticize

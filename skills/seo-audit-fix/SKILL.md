@@ -1,6 +1,6 @@
 ---
 name: seo-audit-fix
-description: For a coding agent working inside a website's own repository. It turns a Seolyticize audit into code changes: map each issue to the template and file that renders it, fix it, verify on the preview and the live site with check_deploy and compare_sites, then tell search engines which URLs changed. Covers Next.js, WordPress, Shopify themes and plain HTML. Use for "fix the SEO issues", "fix the audit in the code", "why is this page not indexed", "fix our canonicals/titles/schema".
+description: For a coding agent working inside a website's own repository. It turns a Seolyticize audit into code changes — map each issue to the template and file that renders it, fix it, verify on the preview and the live site with check_deploy and compare_sites, then tell search engines which URLs changed. Covers Next.js, WordPress, Shopify themes and plain HTML. Use for "fix the SEO issues", "fix the audit in the code", "why is this page not indexed", "fix our canonicals/titles/schema".
 license: MIT
 metadata:
   author: Seolyticize
