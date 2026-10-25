@@ -146,7 +146,7 @@ visit = collector.track_for_visit(url, "Checkout started", user_agent=ua, ip=ip)
 credited = collector.track_later(visit, "Top-up", props={"value": 25})           # True or False
 ```
 
-Never raises. Install with `pip install "git+https://github.com/Seolyticize/sdk-python"`.
+Never raises. Install with `pip install seolyticize`.
 
 ### PHP: Seolyticize\Collector
 

@@ -138,7 +138,7 @@ Errors are `SeolyticizeError` subclasses: `ValidationError` 400, `Authentication
 ## Python SDK
 
 ```bash
-pip install "git+https://github.com/Seolyticize/sdk-python"
+pip install seolyticize
 ```
 
 ```python
