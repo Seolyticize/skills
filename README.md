@@ -33,6 +33,12 @@ Skills that take Seolyticize's findings all the way to published pages, together
 | --- | --- |
 | [`seo-engine`](publishing-skills/seo-engine/SKILL.md) | For a coding agent working inside a site's repo. It runs a daily check and a weekly SEO loop with Seolyticize, then writes and refreshes posts and publishes them to a Forumulate blog with no human in the loop. Every product claim is traced to a file and line in the repo, drafts are scored against the pages that rank, and gates cover cannibalisation, spend and cadence. Changes that need code are never applied automatically: they go to a Discord webhook. Configured per site with `.seo-engine.json`. Use for "run the SEO loop", "weekly SEO", "daily SEO check", "write SEO content", "publish to the Forumulate blog". |
 
+Publishing skills sit outside `skills/`, so install them by path:
+
+```sh
+npx skills add https://github.com/Seolyticize/skills/tree/main/publishing-skills/seo-engine
+```
+
 ## Connect the server
 
 The skills call Seolyticize's tools, so the agent needs the server: `https://seolyticize.com/api/mcp` (Streamable HTTP). The first call opens a browser to sign in and choose which agency, role and clients the agent may use. Where a browser is not available (CI, a headless box), use an API key from Settings → API keys as `Authorization: Bearer $SEOLYTICIZE_API_KEY`, or the CLI's stdio bridge: `npx -y @seolyticize/cli mcp`.
