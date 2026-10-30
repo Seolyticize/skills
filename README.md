@@ -25,6 +25,14 @@ SEO workflows for coding and chat agents, over the [Seolyticize](https://seolyti
 | [`spend-and-costs`](skills/spend-and-costs/SKILL.md) | Control and explain what Seolyticize spends on the agency's own DataForSEO and AI vendor accounts - quote calls before making them, set client budgets and alerts, read a budget and its month-end forecast with get_budget_status, read get_costs and get_client_costs, reconcile the vendor balance with get_vendor_reconciliation and explain any gap, and keep paid calls low. Use for "how much will this cost", "cap this client at $50", "what are we spending", "how much budget is left", "will this client go over", "which client costs most", "why did our DataForSEO balance drop" or "cut our data costs". |
 | [`technical-audit`](skills/technical-audit/SKILL.md) | Run and triage a technical SEO audit of a client's site with Seolyticize. Crawl, rank issues by impact, check index coverage, URL inspection, sitemaps, Core Web Vitals (field and lab), JavaScript rendering, structured data, hreflang and agent readiness, then accept the intentional findings, route fixes to owners and turn the rest into tasks grouped by template. Use for "audit the site", "technical SEO audit", "why isn't it indexed", "what is broken on the site", "crawl the site". |
 
+## Publishing skills
+
+Skills that take Seolyticize's findings all the way to published pages, together with [Forumulate](https://forumulate.com). The same skill is in [Forumulate/skills](https://github.com/forumulate/skills).
+
+| Skill | Use it for |
+| --- | --- |
+| [`seo-engine`](publishing-skills/seo-engine/SKILL.md) | For a coding agent working inside a site's repo. It runs a daily check and a weekly SEO loop with Seolyticize, then writes and refreshes posts and publishes them to a Forumulate blog with no human in the loop. Every product claim is traced to a file and line in the repo, drafts are scored against the pages that rank, and gates cover cannibalisation, spend and cadence. Changes that need code are never applied automatically: they go to a Discord webhook. Configured per site with `.seo-engine.json`. Use for "run the SEO loop", "weekly SEO", "daily SEO check", "write SEO content", "publish to the Forumulate blog". |
+
 ## Connect the server
 
 The skills call Seolyticize's tools, so the agent needs the server: `https://seolyticize.com/api/mcp` (Streamable HTTP). The first call opens a browser to sign in and choose which agency, role and clients the agent may use. Where a browser is not available (CI, a headless box), use an API key from Settings → API keys as `Authorization: Bearer $SEOLYTICIZE_API_KEY`, or the CLI's stdio bridge: `npx -y @seolyticize/cli mcp`.
