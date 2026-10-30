@@ -15,9 +15,9 @@ Fixed 2026-10-30, no workaround needed: quotes match charges and `maxCostMicros`
 ## Forumulate
 | Issue | Workaround |
 |---|---|
-| CLI `publish` on a BLOG space needs `docs.read`. | Mint the narrow PAT with `blog:read`, `blog:write` and `docs:read`, constrained to the blog space. |
-| PATs expire after 90 days by default. | Record `expiresAt` in the env file comment. The daily run warns 14 days before. |
-| `/blog/author` links a 404 (`/blog/author/<key>`). | It's Forumulate's: log it, don't notify Discord. |
-| Post slugs are cut at 70 characters. | Keep `slug` ≤ `slugMaxChars`. Old long URLs need a redirect in `forumulate.yaml`, which is a code-change note. |
+| PATs expire after 90 days by default. | Forumulate warns: `credentials.expiring` on `GET /orgs/{org}/integration-health`, a `pat.expiring` webhook and an owner email 14 days before. The health board needs `settings:manage`, so the daily run still reads `expiresAt` from the env-file comment as a backstop. Rotate with `POST /pats/{id}/rotate`. |
+| A slug longer than 120 characters is refused. | Keep `slug` ≤ `slugMaxChars` (120 for CLI ≥ 0.12.1). Never change the slug of a live post; a new address needs a 301 in `forumulate.yaml` (a code-change note). |
 | A page edited in the studio stops the CLI with `CONFLICT`. | Pull the change into the file. Never use `--force` in an unattended run; hold and notify instead. |
-| The forumulate.com mirror (`/p/<org>/<space>/<slug>`) must name our URL as canonical. | `publish.mjs` checks it on every read-back. |
+| The forumulate.com mirror must name our URL as canonical. Its address has a prefix per space type (`/b/<org>/<space>/<slug>` for a blog; `/p/` redirects there). | `publish.mjs` checks it on every read-back. |
+
+Fixed in `@forumulate/cli@0.12.1` (2026-10-30), no workaround needed: blog `publish` works with only `blog:read` + `blog:write`; slugs are kept up to 120 characters (no silent cut at 70); `excerpt:` (or `description:` / `summary:`) is written to the post's `excerpt`; `author: <key>` and `bylines: [{author: <key>}]` credit the registry author and read back as matching; `/blog/author/<key>` answers 200; unknown front-matter keys are named before anything is sent; reader responses carry `x-request-id` (quote it in a spec).

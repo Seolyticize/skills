@@ -19,7 +19,7 @@ One file at the root of the site repo that holds the Forumulate content (the scr
 | `discord.webhookEnv` | yes | NAME of the env var holding the webhook URL. Never the URL. |
 | `discord.repostAfterDays`, `username` | no | Dedupe reminder interval (14), display name. |
 | `forumulate.org`, `tokenEnv`, `cwd` | yes | Org slug; env var NAME of the narrow publishing token; dir (relative to the config) the publish command runs in. |
-| `forumulate.spaces.<slug>` | yes | `id`, `dir` (Markdown folder, relative to the config), `urlBase`, `publishCmd` (no `--dry-run`; the script appends it), `mirror` (`https://forumulate.com/p/<org>/<space>/{slug}`), `slugMaxChars`, `frontMatterExample`. |
+| `forumulate.spaces.<slug>` | yes | `id`, `dir` (Markdown folder, relative to the config), `urlBase`, `publishCmd` (no `--dry-run`; the script appends it), `mirror` (the space's forumulate.com address, e.g. `https://forumulate.com/b/<org>/<space>/{slug}` for a blog), `slugMaxChars` (120 with CLI ≥ 0.12.1), `frontMatterExample`. |
 | `forumulate.paths` | no | Path prefixes Forumulate serves (crawl noise there is Forumulate's). |
 | `git.contentPaths`, `commitTo`, `push` | yes | What the engine may commit (content only), to which branch, and whether it pushes. |
 | `code.repos`, `appPages`, `seoFiles` | yes | Where app SEO lives, for the "File:" line of code-change notes. |
@@ -32,9 +32,9 @@ Mint one per site with the wide PAT (never put the wide one in `tokenEnv`):
 
 ```bash
 POST https://forumulate.com/api/pats {"name":"seo-engine: <site> blog publish",
-  "scopes":["blog:read","blog:write","docs:read"], "spaceIds":["<blog space id>"],
+  "scopes":["blog:read","blog:write"], "spaceIds":["<blog space id>"],
   "constraints":{"orgIds":["<org id>"],"spaceIds":["<blog space id>"]}}
 # secret = top-level "token"; it expires in 90 days by default: rotate with POST /pats/{id}/rotate
 ```
 
-`docs:read` is needed because the CLI's `publish` reads the space through a docs route even for a BLOG space.
+Use `@forumulate/cli@0.12.1` or later in `publishCmd`: older CLIs need `docs:read` too and cut slugs at 70 characters. Forumulate warns before the token expires (`credentials.expiring` on the integration-health board, a `pat.expiring` webhook, an owner email).

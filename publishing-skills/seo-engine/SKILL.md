@@ -60,7 +60,7 @@ Tool argument names are exact. Copy them from `reference/tools.md` or `GET /api/
    - `publish.mjs --readback-only --urls …` on the last 14 days' pages;
    - `inspect_url` on any page not yet indexed after 7 days.
 4. For anything new that needs code, use the **Code-change path**. Content tasks wait for the weekly run unless a published page broke; in that case, fix and republish it now.
-5. If the Forumulate token's `expires` (in its env-file comment) is less than 14 days away, run `notify.mjs --kind info --key token-expiry:<pat id>`.
+5. Token expiry: Forumulate e-mails the token's owner, sends `pat.expiring` and flags `credentials.expiring` on `GET /orgs/{org}/integration-health` 14 days before (that board needs `settings:manage`, which the narrow token does not have). As a backstop, if the token's `expires` (in its env-file comment) is less than 14 days away, run `notify.mjs --kind info --key token-expiry:<pat id>`.
 
 If a paid call fails with `vendor_balance_empty`, stop paid work for the run. Pieces that still need a score are held, and one `info` note says "vendor balance empty" (key `vendor-balance`).
 

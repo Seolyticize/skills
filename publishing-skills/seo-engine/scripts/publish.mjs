@@ -5,7 +5,8 @@
 // The command is forumulate.spaces.<space>.publishCmd from .seo-engine.json, run in forumulate.cwd, with
 // FORUMULATE_TOKEN taken from the env var named by forumulate.tokenEnv (the narrow publishing token).
 // Read-back: 200, rel=canonical is exactly the URL, not noindex, a <title> and a meta description;
-// and the forumulate.com mirror (spaces.<space>.mirror, "{slug}" filled) must name our URL as canonical too.
+// and the forumulate.com mirror (spaces.<space>.mirror, "{slug}" filled; e.g. /b/<org>/<space>/{slug} for a blog,
+// redirects followed) must name our URL as canonical too.
 import { spawnSync } from "node:child_process";
 import { resolve } from "node:path";
 import { loadConfig, parseArgs, die } from "./lib.mjs";
