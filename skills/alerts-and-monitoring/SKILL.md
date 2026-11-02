@@ -22,7 +22,7 @@ Start every pass with `get_client_brief`, so thresholds fit the client (a shop's
    - traffic-drop 30 (non-branded Search Console clicks down 30% or more week on week);
    - new-critical-issues 1 (a crawl finds a critical issue);
    - rank-drop 5 (a tracked keyword falls 5 or more places).
-     They go to the agency owner's email until changed.
+     They go to the agency owner's email, unless the call names a destination: `channel` with `webhookUrl` (slack, webhook, discord), `emailRecipients` or `telegramChatId`. With one, defaults still going only to the owner's email move there too. `include: ["page-changes"]` adds a fifth: own pages whose title, meta description, H1 or canonical changed, or that went noindex or 404.
 2. **Check delivery.** `list_alert_rules`. Any rule with `hasDeliveryTarget` false fires into nothing; `undeliverable` lists them with the fix. Route each to where someone will see it with `update_alert_rule`:
    - `channel` slack or webhook with `webhookUrl` (https and public; slack posts in Slack's format, webhook as plain JSON);
    - email with `emailRecipients` (up to ten);
