@@ -30,8 +30,10 @@ Stop and ask whenever a step needs a decision only the person can make: the budg
    - If access is not granted yet, the refusal says exactly what the owner must do. Pass it on and carry on with the other steps.
    - If the owner would rather sign in: `get_connection_link` with `service` search_console or google_analytics (with `ga4PropertyId`) gives a link for a person. An agent cannot complete it.
    - Search Console history backfills over time; `get_client_integrations` shows the backfill's progress. Data that has not arrived is unknown, not zero.
+   - **Bing** needs no person once the agency's Bing Webmaster key is saved: `onboard_site` adds the site and ships `/BingSiteAuth.xml`, and `verify_site` verifies it. On their own, `add_bing_site` returns Bing's proofs and `verify_bing_site` asks Bing to check.
+   - **Yandex:** after `connect_yandex_with_token` (the token needs webmaster:verify as well as webmaster:hostinfo), `verify_yandex_host` with `method` file, meta or dns adds the site and returns the proof to deploy. Call it again until `verified` is true.
 7. **First-party analytics.** Whether or not the site has GA4, `set_up_web_analytics` (with `hostnames` for staging or extra domains and `excludePaths` for signed-in areas) returns the one-line snippet for every page's head. It is cookieless. Give it to whoever deploys. `get_web_analytics_setup` shows `lastEventAt` once the first visit arrives. For server-side collection, goals and orders, load analytics-and-conversions.
-8. **Rank tracking.** `list_rank_trackers` shows the tracker `create_client` made. Agree the keywords with the person (keyword-research helps find them). Before adding:
+8. **Rank tracking.** `list_rank_trackers` shows the tracker `create_client` made. Agree the keywords with the person (keyword-research helps find them; for a site too new for Search Console, or with no vendor credit, bootstrap_keywords gives free ideas from autocomplete and competitors' sitemaps). Before adding:
    - quote a month with `estimate_cost`, tool rank_tracker, arguments `clientId` and `trackerId`, and read `monthlyMicros`;
    - every term is a paid lookup on every run, so say the monthly figure and get a yes.
    - Then `add_tracked_keywords` with `terms`, `add_competitors` with the agreed rival domains, and `pin_tracked_keywords` for the handful that matter most (ids from `list_tracked_keywords`). Another market, engine or device is a new tracker: `create_rank_tracker`, with `list_markets` or `search_locations` for the code. Never guess a location code.
@@ -43,7 +45,7 @@ Stop and ask whenever a step needs a decision only the person can make: the budg
     - Deploy notifications: `create_deploy_hook`, so each release submits new and changed pages to IndexNow.
     - A store: `connect_revenue_source` for Stripe, Shopify or Paddle.
     - Reports and portal: `create_report` and `schedule_report`. Make a portal link (`create_portal_link`) only when the person asks: anyone holding it sees the client's results.
-13. **Confirm.** `get_next_steps` lists each onboarding item as done, todo, in progress, failed or blocked, with the exact call for each gap and the optional connections still open. Do every todo you can. Collect the rest for the person.
+13. **Confirm.** `get_next_steps` (its missing field lists every item not done) lists each onboarding item as done, todo, in progress, failed or blocked, with the exact call for each gap and the optional connections still open. Do every todo you can. Collect the rest for the person.
 14. **Record it.** `update_client_brief` with a research entry, "Onboarding", saying what was set up, the ids, what it costs per month, and what waits on whom.
 
 ## Decision points

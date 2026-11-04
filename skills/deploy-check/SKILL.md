@@ -123,7 +123,7 @@ Watch production for one to two weeks. Before you start, add a timeline note wit
 1. **Right after deploy:**
    - Call `check_deploy` with urls set to the live key pages. Every intended change should show, and nothing else.
    - Call `submit_indexnow` for changed pages, first with dryRun true.
-   - `create_deploy_hook` automates this submission on every deploy.
+   - `create_deploy_hook` automates this submission on every deploy, and each call also runs `check_deploy` on the changed pages: its answer has seoCheck, with passed false on a critical regression.
 2. **After the next crawl (or trigger one with `start_crawl`):**
    - `get_seo_changes` between this crawl and the one before. Critical changes also file as regression rules: regression-noindex-added, regression-canonical-changed, regression-title-dropped, regression-status-error, regression-hreflang-lost.
    - `compare_crawls` for new issues by rule.
