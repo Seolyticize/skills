@@ -99,7 +99,7 @@ Submit only URLs whose content or metadata actually changed. Each engine rations
 - **Google.** Google picks changes up from the sitemap, so make sure lastmod moved for the changed pages (`validate_sitemap` checks lastmod honesty). Call `submit_sitemap` if the sitemap address itself is new.
 - **Job postings and livestreams only.** For pages with JobPosting markup, or a BroadcastEvent inside a VideoObject, call `notify_google_indexing` (URL_UPDATED, or URL_DELETED when a vacancy is filled). Run it with dryRun first. Google refuses it for any other page, so **never use it for ordinary pages.**
 - **Seolyticize's own crawler.** `submit_urls` queues the changed URLs to be recrawled sooner. dryRun true previews it.
-- **Every deploy.** `create_deploy_hook` gives the pipeline one URL to call after each deploy. It diffs the sitemap and submits new and changed pages to IndexNow by itself.
+- **Every deploy.** `create_deploy_hook` gives the pipeline one URL to call after each deploy, with a secret in a header. It diffs the sitemap and submits new and changed pages to IndexNow by itself.
 
 ### 7. Record
 

@@ -56,7 +56,7 @@ The watch kinds look back to their last firing (at most a week) and stay silent 
 ## B. Releases and change detection
 
 - **Before a deploy ships:** `check_deploy` with `previewUrl` (a staging or preview origin) or `urls`, and `failOn` (critical by default). It compares what search engines will read (status, robots, canonical, hreflang, title, H1, structured data) with the latest crawl, or the crawl `baselineCrawlId` names; `notes` warns when that latest crawl started before the last recorded deploy. `passed` false means a critical change; `markdown` is a ready pull-request comment. It costs no vendor money. For a full release review, load deploy-check.
-- **After every deploy:** `create_deploy_hook` gives a secret URL the pipeline calls after each deploy. Each call diffs the sitemap and submits new and changed pages to IndexNow, and notes the deploy on the timeline. The URL is shown once; treat it as a secret. `get_deploy_hook` shows what the last call did; `revoke_deploy_hook` if it leaks.
+- **After every deploy:** `create_deploy_hook` gives a URL and a secret the pipeline sends in a header after each deploy (a form that takes only a URL uses `webhookUrl`). Each call diffs the sitemap and submits new and changed pages to IndexNow, and notes the deploy on the timeline. The secret is shown once. `get_deploy_hook` shows what the last call did; `rotate_deploy_hook` if it leaks.
 - **What changed between crawls:** `get_seo_changes` (critical: noindex added, canonical changed, title dropped, 200 to 4xx/5xx, hreflang lost, H1 rewritten) by field and URL template, and `compare_crawls` for issues new, fixed, regressed or improved.
 - **robots.txt and sitemaps:** `get_robots_history` for lines added or removed and sitemap sizes per crawl.
 - **Competitors:** `get_competitor_page_changes` for pages that outrank the client and changed.
@@ -66,7 +66,7 @@ The watch kinds look back to their last firing (at most a week) and stay silent 
 
 For a system that should hear about events as they happen (verify the tool list with `find_tools` if anything here is missing):
 
-1. `create_webhook` with an https `url`, `events`, and `clientId` (null for every client). Events: crawl.completed, gsc.synced, rank.moved, backlink.new, backlink.lost, issue.new_critical, ai.citation.gained, ai.citation.lost, competitor.page.new, budget.threshold and alert.fired. The secret is shown once.
+1. `create_webhook` with an https `url`, `events`, and `clientId` (null for every client). Events: crawl.completed, gsc.synced, rank.moved, backlink.new, backlink.lost, issue.new_critical, ai.citation.gained, ai.citation.lost, competitor.page.new, budget.threshold, vendor.balance_low, vendor.balance_empty and alert.fired. The secret is shown once.
 2. Tell the receiver to verify each POST: the Seolyticize-Signature header is t=<unix>,v1=<hex HMAC-SHA256 of "<t>.<body>" with the secret>; Seolyticize-Event and Seolyticize-Delivery name the event and the delivery.
 3. `send_test_event` queues a test alert.fired within a minute, to check the receiver end to end.
 4. Deliveries retry with backoff from a minute to a day until a 2xx. `list_webhooks` shows whether one was switched off after failing too long; `list_webhook_deliveries` gives each delivery's status, attempts and the receiver's last HTTP status; `replay_webhooks` resends one delivery or everything since a time. `delete_webhook` stops one.
@@ -94,4 +94,4 @@ For a system that should hear about events as they happen (verify the tool list 
 - The crawl schedule and its next run.
 - For a fired alert: what happened, the evidence (figures, dates, the tool), the likely cause with its confidence, and the fix or the decision needed.
 - Any paid monitoring turned on, with its quoted monthly cost.
-- Secrets (webhook secrets, deploy hook URLs) handed over once and never repeated in a summary or log.
+- Secrets (webhook secrets, deploy hook secrets and webhookUrls) handed over once and never repeated in a summary or log.
