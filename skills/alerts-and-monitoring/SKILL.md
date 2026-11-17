@@ -34,7 +34,7 @@ Start every pass with `get_client_brief`, so thresholds fit the client (a shop's
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | rank-drop               | positions fallen                                                                                                  | every client with tracking                        |
 | traffic-drop            | percent of clicks lost                                                                                            | every client with Search Console                  |
-| new-critical-issues     | count of new critical findings                                                                                    | every client                                      |
+| new-critical-issues     | count of critical findings, once per crawl                                                                        | every client                                      |
 | backlinks-lost          | count lost                                                                                                        | link-building clients                             |
 | site-unreachable        | (any, use 1)                                                                                                      | every client                                      |
 | serp-features           | features lost or won                                                                                              | clients that hold snippets, packs or AI Overviews |

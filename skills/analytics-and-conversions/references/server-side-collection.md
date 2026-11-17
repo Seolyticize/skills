@@ -36,17 +36,19 @@ The query string and fragment of `u` are dropped after the utm_ tags are read. S
 
 ## Answers
 
-| Status                       | Meaning                                                                                                                                                          |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 202 with `{"visit": "v1.…"}` | A person's visit, from a server collector: keep the token if a conversion may follow                                                                             |
-| 202, no body                 | Accepted from a browser; or quietly dropped as a bot, an AI agent (recorded apart as an agent read), or an excluded path; or a later event credited to its visit |
-| 400                          | Not JSON, a field out of bounds, an unknown field (named), a pageview sent with `visit`, or a visit token this site did not issue                                |
-| 401                          | A wrong server key (refused, never counted as a browser), or a visit token sent without the key                                                                  |
-| 403                          | The page's hostname, or a browser's Origin, is not one of the setup's hostnames                                                                                  |
-| 404                          | No setup has that site key, or a visit token's visit was not found                                                                                               |
-| 410                          | The visit token is older than 35 days                                                                                                                            |
-| 413                          | Body over 4 KB                                                                                                                                                   |
-| 429                          | Too many from one visitor (or for one visit)                                                                                                                     |
+| Status                                                  | Meaning                                                                                                                                                                                                                 |
+| ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 202 with `{"visit": "v1.…"}`                            | A person's visit, from a server collector: keep the token if a conversion may follow                                                                                                                                    |
+| 202 with `{"credited": "visit", "landing": "/pricing"}` | An event sent with `visit`, credited to that visit's landing page and source                                                                                                                                            |
+| 202 with `"credited": "session"` or `"none"`            | A server event without `visit`: it joined the visit of the same `ip` and `ua` in the last 30 minutes, or it joined none and counts as unattributed (`reason` says so). Log it to see whether conversions are attributed |
+| 202, no body                                            | Accepted from a browser; or quietly dropped as a bot, an AI agent (recorded apart as an agent read), or an excluded path                                                                                                |
+| 400                                                     | Not JSON, a field out of bounds, an unknown field (named), a pageview sent with `visit`, or a visit token this site did not issue                                                                                       |
+| 401                                                     | A wrong server key (refused, never counted as a browser), or a visit token sent without the key                                                                                                                         |
+| 403                                                     | The page's hostname, or a browser's Origin, is not one of the setup's hostnames                                                                                                                                         |
+| 404                                                     | No setup has that site key, or a visit token's visit was not found                                                                                                                                                      |
+| 410                                                     | The visit token is older than 35 days                                                                                                                                                                                   |
+| 413                                                     | Body over 4 KB                                                                                                                                                                                                          |
+| 429                                                     | Too many from one visitor (or for one visit)                                                                                                                                                                            |
 
 Only a person's visit gets a token. A bot, an AI agent or an excluded path answers 202 with no body: there is no visit to credit.
 
