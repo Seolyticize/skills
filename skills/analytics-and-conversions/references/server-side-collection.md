@@ -100,7 +100,9 @@ Answer: `{"orderId", "outcome": "recorded" | "updated" | "unchanged" | "refused"
 
 All three fill `ip`, `ua`, `h`, `sa` and `c` from the request's own headers, drop bots before sending, strip query parameters except the utm_ tags, and never hold up or break the page. With the browser tag also installed, use only agents, or every person is counted twice.
 
-### Node / Next.js: @seolyticize/next/server
+### Node / Next.js: @seolyticize/sdk or @seolyticize/next/server
+
+The same collector ships in both: `import { createCollector } from "@seolyticize/sdk"` in any Node server, or from `@seolyticize/next/server` in a Next app.
 
 ```ts
 import { addressFrom, createCollector } from "@seolyticize/next/server";
